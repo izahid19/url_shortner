@@ -83,6 +83,19 @@ export function CreateLink() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, data]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        createNewLink();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [formValues]); // Attach listener with the latest state
+
   const createNewLink = async () => {
     setErrors([]);
     try {
@@ -153,7 +166,7 @@ export function CreateLink() {
           </div>
           <div>
             <label className="text-sm sm:text-base text-black mb-1 block">
-              Custom URL
+              Custom URL (optional)
             </label>
             <div className="flex flex-wrap gap-2 items-center">
               <Card className="p-2 text-sm sm:text-base">triimrrr.netlify.app</Card>
