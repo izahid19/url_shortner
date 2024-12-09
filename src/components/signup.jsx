@@ -108,6 +108,19 @@ const Signup = () => {
     }
   }, [error, data, longLink, navigate]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        handleSignup();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [formData]); // Attach the listener with the latest state
+
   const handleSignup = async () => {
     setErrors([]);
     try {

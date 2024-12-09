@@ -44,6 +44,19 @@ const Login = () => {
     }
   }, [error, data, fetchUser, longLink, navigate]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        handleLogin();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [formData]); // Attach the listener with the latest state
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -87,7 +100,7 @@ const Login = () => {
       const schema = Yup.object().shape({
         email: Yup.string().email("Invalid email").required("Email is required"),
         password: Yup.string()
-          .min(6, "Password must be at least 6 characters")
+          .min(1, "Password is required")
           .required("Password is required"),
       });
 

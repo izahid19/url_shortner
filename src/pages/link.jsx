@@ -1,44 +1,46 @@
 import DeviceStats from "@/components/device-stats";
 import Location from "@/components/location-stats";
-import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {UrlState} from "@/context";
-import {getClicksForUrl} from "@/db/apiClicks";
-import {deleteUrl, getUrl} from "@/db/apiUrls";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UrlState } from "@/context";
+import { getClicksForUrl } from "@/db/apiClicks";
+import { deleteUrl, getUrl } from "@/db/apiUrls";
 import useFetch from "@/hooks/use-fetch";
-import {Copy, Download, LinkIcon, Trash} from "lucide-react";
-import {useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {BarLoader, BeatLoader} from "react-spinners";
+import { Copy, Download, LinkIcon, Trash } from "lucide-react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { BarLoader, BeatLoader } from "react-spinners";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const LinkPage = () => {
   const downloadImage = () => {
     const imageUrl = url?.qr;
     const fileName = url?.title;
 
-    // Create an anchor element
     const anchor = document.createElement("a");
     anchor.href = imageUrl;
     anchor.download = fileName;
-
-    // Append the anchor to the body
     document.body.appendChild(anchor);
-
-    // Trigger the download by simulating a click event
     anchor.click();
-
-    // Remove the anchor from the document
     document.body.removeChild(anchor);
   };
+
   const navigate = useNavigate();
-  const {user} = UrlState();
-  const {id} = useParams();
+  const { user } = UrlState();
+  const { id } = useParams();
   const {
     loading,
     data: url,
     fn,
     error,
-  } = useFetch(getUrl, {id, user_id: user?.id});
+  } = useFetch(getUrl, { id, user_id: user?.id });
 
   const {
     loading: loadingStats,
@@ -46,7 +48,7 @@ const LinkPage = () => {
     fn: fnStats,
   } = useFetch(getClicksForUrl, id);
 
-  const {loading: loadingDelete, fn: fnDelete} = useFetch(deleteUrl, id);
+  const { loading: loadingDelete, fn: fnDelete } = useFetch(deleteUrl, id);
 
   useEffect(() => {
     fn();
@@ -72,32 +74,54 @@ const LinkPage = () => {
       )}
       <div className="flex flex-col gap-8 sm:flex-row justify-between">
         <div className="flex flex-col items-start gap-8 rounded-lg sm:w-2/5">
-          <span className="text-6xl font-extrabold hover:underline cursor-pointer">
-            {url?.title}
+          <span className="text-4xl font-extrabold ">
+            Title:{" "}
+            <span className="hover:underline cursor-pointer">{url?.title}</span>
           </span>
-          <a
-            href={`https://triimrrr.netlify.app/${link}`}
-            target="_blank"
-            className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
-          >
-            https://triimrrr.netlify.app/{link}
-          </a>
-          <a
-            href={url?.original_url}
-            target="_blank"
-            className="flex items-center gap-1 hover:underline cursor-pointer"
-          >
-            <LinkIcon className="p-1" />
-            {url?.original_url}
-          </a>
+          <div className="flex flex-wrap items-center gap-2 text-1xl sm:text-2xl font-bold">
+            <span>Shortner Link:</span>
+            <a
+              href={`https://triimrrr.netlify.app/${link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:underline cursor-pointer break-all"
+            >
+              https://triimrrr.netlify.app/{link}
+            </a>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <span>Original Link:</span>
+            <a
+              href={url?.original_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline cursor-pointer text-blue-500 break-all"
+            >
+              {url?.original_url}
+            </a>
+          </div>
+
           <span className="flex items-end font-extralight text-sm">
-            {new Date(url?.created_at).toLocaleString()}
+            Created At:{" "}
+            <span className="ml-1">
+              {new Date(url?.created_at).toLocaleString(undefined, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
           </span>
+
           <div className="flex gap-2">
             <Button
               variant="ghost"
               onClick={() =>
-                navigator.clipboard.writeText(`https://triimrrr.netlify.app/${link}`)
+                navigator.clipboard.writeText(
+                  `https://triimrrr.netlify.app/${link}`
+                )
               }
             >
               <Copy />
@@ -105,21 +129,48 @@ const LinkPage = () => {
             <Button variant="ghost" onClick={downloadImage}>
               <Download />
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() =>
-                fnDelete().then(() => {
-                  navigate("/dashboard");
-                })
-              }
-              disable={loadingDelete}
-            >
-              {loadingDelete ? (
-                <BeatLoader size={5} color="white" />
-              ) : (
-                <Trash />
-              )}
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center justify-center"
+                  disabled={loadingDelete}
+                >
+                  {loadingDelete ? (
+                    <BeatLoader size={5} color="white" />
+                  ) : (
+                    <Trash />
+                  )}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-gray-900">
+                <DialogHeader>
+                  <DialogTitle>Confirm Deletion</DialogTitle>
+                </DialogHeader>
+                <p className="text-sm text-gray-500">
+                  Are you sure you want to delete this link? This action cannot
+                  be undone.
+                </p>
+                <DialogFooter>
+                  <DialogTrigger asChild>
+                    <Button className="text-gray-500" variant="outline">
+                      Cancel
+                    </Button>
+                  </DialogTrigger>
+                  <Button
+                    variant="destructive"
+                    onClick={() =>
+                      fnDelete().then(() => {
+                        navigate("/dashboard");
+                      })
+                    }
+                    disabled={loadingDelete}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
           <img
             src={url?.qr}
