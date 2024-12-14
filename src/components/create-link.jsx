@@ -28,6 +28,7 @@ export function CreateLink() {
   let [searchParams, setSearchParams] = useSearchParams();
   const longLink = searchParams.get("createNew");
 
+  const [isDialogOpen, setIsDialogOpen] = useState(!!longLink);
   const [errors, setErrors] = useState({});
   const [formValues, setFormValues] = useState({
     title: "",
@@ -114,11 +115,19 @@ export function CreateLink() {
     }
   };
 
+  const handleCancel = () => {
+    setFormValues({ title: "", longUrl: "", customUrl: "" });
+    setErrors({});
+    setSearchParams({});
+    setIsDialogOpen(false); // Close the dialog
+  };
+
   return (
     <Dialog
-      defaultOpen={longLink}
+      open={isDialogOpen}
       onOpenChange={(res) => {
-        if (!res) setSearchParams({});
+        setIsDialogOpen(res);
+        if (!res) setSearchParams({}); // Update search params when dialog closes
       }}
     >
       <DialogTrigger asChild>
@@ -191,6 +200,14 @@ export function CreateLink() {
             disabled={loading}
           >
             {loading ? <BeatLoader size={10} color="white" /> : "Create"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleCancel}
+            className="ml-2 text-gray-800"
+          >
+            Cancel
           </Button>
         </DialogFooter>
       </DialogContent>
