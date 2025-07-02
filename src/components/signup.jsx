@@ -31,7 +31,7 @@ const Signup = () => {
     email: "",
     password: "",
     confirm_password: "",
-    profile_pic: null,
+    profilepic: null,
   });
   const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -46,7 +46,7 @@ const Signup = () => {
       [name]: files ? files[0] : value,
     }));
 
-    if (name === "profile_pic" && files?.[0]) {
+    if (name === "profilepic" && files?.[0]) {
       setProfilePicPreview(URL.createObjectURL(files[0]));
     }
 
@@ -74,7 +74,7 @@ const Signup = () => {
       confirm_password: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match")
         .required("Confirm Password is required"),
-      profile_pic: Yup.mixed().required("Profile picture is required"),
+      profilepic: Yup.mixed().required("Profile picture is required"),
     });
 
     try {
@@ -90,7 +90,7 @@ const Signup = () => {
   const handleDeleteProfilePic = () => {
     setFormData((prevState) => ({
       ...prevState,
-      profile_pic: null,
+      profilepic: null,
     }));
     setProfilePicPreview(null);
 
@@ -135,7 +135,7 @@ const Signup = () => {
         confirm_password: Yup.string()
           .oneOf([Yup.ref("password"), null], "Passwords must match")
           .required("Confirm Password is required"),
-        profile_pic: Yup.mixed().required("Profile picture is required"),
+        profilepic: Yup.mixed().required("Profile picture is required"),
       });
 
       await schema.validate(formData, { abortEarly: false });
@@ -234,7 +234,7 @@ const Signup = () => {
             <label className="block text-sm font-medium mb-1">Profile Picture</label>
             <input
               ref={fileInputRef}
-              name="profile_pic"
+              name="profilepic"
               type="file"
               accept="image/*"
               onChange={handleInputChange}
@@ -253,7 +253,7 @@ const Signup = () => {
                 />
               </div>
             )}
-            {errors.profile_pic && <Error message={errors.profile_pic} />}
+            {errors.profilepic && <Error message={errors.profilepic} />}
           </div>
         </CardContent>
         <CardFooter>
