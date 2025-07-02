@@ -47,6 +47,7 @@ export async function getCurrentUser() {
 }
 
 export async function logout() {
-  const {error} = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  const { error } = await supabase.auth.signOut();
+  // Ignore harmless session_not_found error
+  if (error && error.code !== "session_not_found") throw new Error(error.message);
 }
