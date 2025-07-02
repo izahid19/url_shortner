@@ -178,7 +178,7 @@ export function CreateLink() {
               Custom URL (optional)
             </label>
             <div className="flex flex-wrap gap-2 items-center">
-              <Card className="p-2 text-sm sm:text-base">triimrrr.netlify.app</Card>
+              <Card className="p-2 text-sm sm:text-base">trimmm.netlify.app</Card>
               <span className="text-sm">/</span>
               <Input
                 id="customUrl"
