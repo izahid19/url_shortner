@@ -81,12 +81,12 @@ const LinkPage = () => {
           <div className="flex flex-wrap items-center gap-2 text-1xl sm:text-2xl font-bold">
             <span>Shortner Link:</span>
             <a
-              href={`https://triimrrr.netlify.app/${link}`}
+              href={`https://trimmm.netlify.app/${link}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-400 hover:underline cursor-pointer break-all"
             >
-              https://triimrrr.netlify.app/{link}
+              https://trimmm.netlify.app/{link}
             </a>
           </div>
 
@@ -120,7 +120,7 @@ const LinkPage = () => {
               variant="ghost"
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `https://triimrrr.netlify.app/${link}`
+                  `https://trimmm.netlify.app/${link}`
                 )
               }
             >

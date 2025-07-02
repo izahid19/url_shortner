@@ -59,7 +59,7 @@ const LinkCard = ({url = [], fetchUrls}) => {
         <span className="text-lg md:text-2xl font-bold mb-3 break-words">
           Short URL:{" "}
           <span className="text-blue-400 hover:underline cursor-pointer">
-            https://triimrrr.netlify.app/{url?.custom_url || url.short_url}
+            https://trimmm.netlify.app/{url?.custom_url || url.short_url}
           </span>
         </span>
         <span className="flex items-center gap-2 flex-wrap mb-3">
@@ -75,7 +75,7 @@ const LinkCard = ({url = [], fetchUrls}) => {
         <Button
           variant="ghost"
           onClick={() =>
-            navigator.clipboard.writeText(`https://triimrrr.netlify.app/${url?.short_url}`)
+            navigator.clipboard.writeText(`https://trimmm.netlify.app/${url?.short_url}`)
           }
           className="flex items-center justify-center"
         >
