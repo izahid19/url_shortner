@@ -54,3 +54,5 @@ function App() {
     </UrlProvider>
   );
 }
+
+export default App;
