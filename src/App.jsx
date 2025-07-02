@@ -39,6 +39,10 @@ const router = createBrowserRouter([
           </RequireAuth>
         ),
       },
+      {
+        path: "/:id",
+        element: <RedirectLink />,
+      },
     ],
   },
 ]);
@@ -50,5 +54,3 @@ function App() {
     </UrlProvider>
   );
 }
-
-export default App;
