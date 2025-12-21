@@ -134,11 +134,11 @@ export function CreateLink() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="destructive">Create New Link</Button>
+        <Button className="h-10 px-4 bg-gradient-to-r from-[#f97316] to-[#ea580c] hover:from-[#ea580c] hover:to-[#dc2626] text-white font-medium rounded-xl shadow-lg shadow-[#f97316]/20">Create New Link</Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-sm sm:max-w-md mx-auto">
+      <DialogContent className="w-full max-w-sm sm:max-w-md mx-auto bg-zinc-900 border-neutral-800">
         <DialogHeader>
-          <DialogTitle className="font-bold text-xl sm:text-2xl text-black">
+          <DialogTitle className="font-bold text-xl sm:text-2xl text-white">
             Create New
           </DialogTitle>
         </DialogHeader>
@@ -149,7 +149,7 @@ export function CreateLink() {
         )}
         <div className="flex flex-col space-y-4">
           <div>
-            <label className="text-sm sm:text-base text-black mb-1 block">
+            <label className="text-sm sm:text-base text-gray-300 mb-1 block">
               Short Link's Title
             </label>
             <Input
@@ -158,12 +158,12 @@ export function CreateLink() {
               value={formValues.title}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-full text-gray-900"
+              className="w-full bg-zinc-800/50 border-neutral-700 text-white placeholder:text-gray-500"
             />
             {errors.title && <Error message={errors.title} />}
           </div>
           <div>
-            <label className="text-sm sm:text-base text-black mb-1 block">
+            <label className="text-sm sm:text-base text-gray-300 mb-1 block">
               Long URL
             </label>
             <Input
@@ -172,24 +172,24 @@ export function CreateLink() {
               value={formValues.longUrl}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="w-full text-gray-900"
+              className="w-full bg-zinc-800/50 border-neutral-700 text-white placeholder:text-gray-500"
             />
             {errors.longUrl && <Error message={errors.longUrl} />}
           </div>
           <div>
-            <label className="text-sm sm:text-base text-black mb-1 block">
+            <label className="text-sm sm:text-base text-gray-300 mb-1 block">
               Custom URL (optional)
             </label>
             <div className="flex flex-wrap gap-2 items-center">
-              <Card className="p-2 text-sm sm:text-base">{BASE_URL.replace(/^https?:\/\//, '')}</Card>
-              <span className="text-sm">/</span>
+              <Card className="p-2 text-sm sm:text-base bg-zinc-800 border-neutral-700 text-white">{BASE_URL.replace(/^https?:\/\//, '')}</Card>
+              <span className="text-sm text-gray-400">/</span>
               <Input
                 id="customUrl"
                 placeholder="Custom Link (optional)"
                 value={formValues.customUrl}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className="w-full sm:w-auto flex-grow text-gray-900"
+                className="w-full sm:w-auto flex-grow bg-zinc-800/50 border-neutral-700 text-white placeholder:text-gray-500"
               />
             </div>
           </div>
@@ -198,9 +198,9 @@ export function CreateLink() {
         <DialogFooter className="sm:justify-start mt-4">
           <Button
             type="button"
-            variant="destructive"
             onClick={createNewLink}
             disabled={loading}
+            className="bg-[#f97316] hover:bg-[#ea580c] text-white font-medium rounded-xl"
           >
             {loading ? <BeatLoader size={10} color="white" /> : "Create"}
           </Button>
@@ -208,7 +208,7 @@ export function CreateLink() {
             type="button"
             variant="outline"
             onClick={handleCancel}
-            className="ml-2 text-gray-800"
+            className="ml-2 text-gray-400 border-neutral-700 hover:bg-zinc-800 hover:text-white"
           >
             Cancel
           </Button>

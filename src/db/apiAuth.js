@@ -19,13 +19,13 @@ export async function login({ email, password }) {
 /**
  * Signup user - sends verification OTP
  */
-export async function signup({ name, email, password, profilepic }) {
+export async function signup({ name, email, password, profile_pic }) {
   const formData = new FormData();
   formData.append('name', name);
   formData.append('email', email);
   formData.append('password', password);
-  if (profilepic) {
-    formData.append('profilePic', profilepic);
+  if (profile_pic) {
+    formData.append('profilePic', profile_pic);
   }
 
   const response = await api('/api/auth/signup', {

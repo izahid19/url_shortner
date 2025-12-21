@@ -16,6 +16,7 @@ import {
 import { Button } from "./ui/button";
 import Error from "./error";
 import { UrlState } from "@/context";
+import { MailCheck, ArrowLeft } from "lucide-react";
 
 const VerifyEmail = () => {
   let [searchParams] = useSearchParams();
@@ -72,7 +73,7 @@ const VerifyEmail = () => {
     try {
       await resendOtp({ email, type: "verify" });
       toast.success("OTP sent successfully!");
-      setCountdown(60); // 60 second cooldown
+      setCountdown(60);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -94,21 +95,25 @@ const VerifyEmail = () => {
   }, [otp]);
 
   return (
-    <>
-      <ToastContainer />
-      <Card className="max-w-md w-full mx-auto p-4 sm:p-6 space-y-4">
-        <CardHeader>
-          <CardTitle className="text-center text-xl sm:text-2xl">
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <ToastContainer theme="dark" />
+      <Card className="max-w-md w-full bg-zinc-900/80 border-neutral-800 backdrop-blur-sm">
+        <CardHeader className="text-center pb-4">
+          <div className="mx-auto w-12 h-12 bg-[#f97316]/20 rounded-full flex items-center justify-center mb-4">
+            <MailCheck className="w-6 h-6 text-[#f97316]" />
+          </div>
+          <CardTitle className="text-2xl font-bold text-white">
             Verify Your Email
           </CardTitle>
-          <CardDescription className="text-center text-sm text-gray-600">
-            We&apos;ve sent a verification code to <strong>{email}</strong>
+          <CardDescription className="text-gray-400">
+            We&apos;ve sent a verification code to{" "}
+            <span className="text-white font-medium">{email}</span>
           </CardDescription>
           {error && <Error message={error} />}
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm font-medium">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300 text-center">
               Enter 6-digit OTP
             </label>
             <Input
@@ -116,43 +121,44 @@ const VerifyEmail = () => {
               placeholder="000000"
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              className="w-full text-center text-2xl tracking-widest"
+              className="h-14 text-center text-2xl tracking-[0.5em] bg-zinc-800/50 border-neutral-700 text-white placeholder:text-gray-500 focus:border-[#f97316]"
               maxLength={6}
             />
           </div>
-          <p className="text-sm text-gray-500 text-center">
+          <p className="text-sm text-gray-400 text-center">
             Didn&apos;t receive the code?{" "}
             {countdown > 0 ? (
-              <span className="text-gray-400">Resend in {countdown}s</span>
+              <span className="text-gray-500">Resend in {countdown}s</span>
             ) : (
               <button
                 onClick={handleResend}
                 disabled={resending}
-                className="text-blue-500 hover:underline disabled:opacity-50"
+                className="text-[#f97316] hover:text-[#ea580c] hover:underline disabled:opacity-50"
               >
                 {resending ? "Sending..." : "Resend OTP"}
               </button>
             )}
           </p>
         </CardContent>
-        <CardFooter className="flex flex-col gap-2">
+        <CardFooter className="flex flex-col gap-3 pt-2">
           <Button
-            className="w-full"
+            className="w-full h-12 bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold"
             onClick={handleVerify}
             disabled={loading || otp.length !== 6}
           >
-            {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Verify Email"}
+            {loading ? <BeatLoader size={10} color="#ffffff" /> : "Verify Email"}
           </Button>
           <Button
             variant="ghost"
-            className="w-full"
+            className="w-full text-gray-400 hover:text-white hover:bg-zinc-800"
             onClick={() => navigate("/auth")}
           >
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Login
           </Button>
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import * as Yup from "yup";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { login } from "@/db/apiAuth";
@@ -31,7 +31,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [showPassword, setShowPassword] = useState(false); // Track password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const { loading, error, fn: fnLogin, data } = useFetch(login, formData);
   const { fetchUser } = UrlState();
@@ -55,7 +55,7 @@ const Login = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [formData]); // Attach the listener with the latest state
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -121,63 +121,70 @@ const Login = () => {
 
   return (
     <>
-      <ToastContainer />
-      <Card className="max-w-md w-full mx-auto p-4 sm:p-6 space-y-4">
-        <CardHeader>
-          <CardTitle className="text-center text-xl sm:text-2xl">Login</CardTitle>
-          <CardDescription className="text-center text-sm text-gray-600">
+      <ToastContainer theme="dark" />
+      <Card className="max-w-md w-full mx-auto bg-zinc-900/80 border-neutral-800 backdrop-blur-sm">
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="text-2xl font-bold text-white">Login</CardTitle>
+          <CardDescription className="text-gray-400">
             to your account if you already have one
           </CardDescription>
           {error && <Error message={error.message} />}
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="block mb-1 text-sm font-medium">Email</label>
-            <Input
-              name="email"
-              type="email"
-              placeholder="Enter Email"
-              onBlur={handleBlur}
-              onChange={handleInputChange}
-              className="w-full"
-            />
+        <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">Email</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <Input
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                onBlur={handleBlur}
+                onChange={handleInputChange}
+                className="pl-10 h-12 bg-zinc-800/50 border-neutral-700 text-white placeholder:text-gray-500 focus:border-[#f97316] focus:ring-[#f97316]/20"
+              />
+            </div>
             {errors.email && <Error message={errors.email} />}
           </div>
-          <div>
-            <label className="block mb-1 text-sm font-medium">Password</label>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-300">Password</label>
             <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
               <Input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter Password"
+                placeholder="Enter your password"
                 onBlur={handleBlur}
                 onChange={handleInputChange}
-                className="w-full"
+                className="pl-10 pr-10 h-12 bg-zinc-800/50 border-neutral-700 text-white placeholder:text-gray-500 focus:border-[#f97316] focus:ring-[#f97316]/20"
               />
-              <span
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
             {errors.password && <Error message={errors.password} />}
+          </div>
+          <div className="flex justify-end">
             <button
               type="button"
               onClick={() => navigate("/forgot-password")}
-              className="text-sm text-blue-500 hover:underline self-end mt-1"
+              className="text-sm text-[#f97316] hover:text-[#ea580c] hover:underline transition-colors"
             >
               Forgot Password?
             </button>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col gap-2">
+        <CardFooter className="flex flex-col gap-3 pt-2">
           <Button
-            className="w-full"
+            className="w-full h-12 bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold text-base transition-all duration-200"
             onClick={handleLogin}
             disabled={loading}
           >
-            {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
+            {loading ? <BeatLoader size={10} color="#ffffff" /> : "Login"}
           </Button>
         </CardFooter>
       </Card>

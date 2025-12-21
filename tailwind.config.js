@@ -76,28 +76,25 @@ export default {
   					height: '0'
   				}
   			},
-  			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
+  			'shimmer-slide': {
   				to: {
-  					height: 'var(--radix-accordion-content-height)'
+  					transform: 'translate(calc(100cqw - 100%), 0)'
   				}
   			},
-  			'accordion-up': {
+  			'spin-around': {
   				from: {
-  					height: 'var(--radix-accordion-content-height)'
+  					transform: 'translateZ(0) rotate(0)'
   				},
   				to: {
-  					height: '0'
+  					transform: 'translateZ(0) rotate(360deg)'
   				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'shimmer-slide': 'shimmer-slide var(--speed) ease-in-out infinite alternate',
+  			'spin-around': 'spin-around calc(var(--speed) * 2) infinite linear'
   		}
   	}
   },

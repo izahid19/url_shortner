@@ -9,9 +9,11 @@ import RedirectLink from "./pages/redirect-link";
 import LandingPage from "./pages/landing-page";
 import Dashboard from "./pages/dashboard";
 import LinkPage from "./pages/link";
+import Profile from "./pages/profile";
 import Auth from "./pages/auth";
 import VerifyEmail from "./components/verify-email";
 import ForgotPassword from "./components/forgot-password";
+
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <LinkPage />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <RequireAuth>
+            <Profile />
           </RequireAuth>
         ),
       },

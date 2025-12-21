@@ -17,16 +17,33 @@ function Auth() {
   }, [isAuthenticated, loading, navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-10">
-      <h1 className="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-center">
-        {searchParams.get("createNew")
-          ? "Hold up! Let's login first.."
-          : "Login / Signup"}
-      </h1>
-      <Tabs defaultValue="login" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="login">Login</TabsTrigger>
-          <TabsTrigger value="signup">Signup</TabsTrigger>
+    <div className="min-h-[80vh] flex flex-col items-center justify-center gap-8 px-4">
+      <div className="text-center">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
+          {searchParams.get("createNew")
+            ? "Hold up! Let's login first.."
+            : "Welcome Back"}
+        </h1>
+        <p className="text-gray-400">
+          {searchParams.get("createNew")
+            ? "Sign in to create your short link"
+            : "Sign in to manage your links"}
+        </p>
+      </div>
+      <Tabs defaultValue="login" className="w-full max-w-[400px]">
+        <TabsList className="grid w-full grid-cols-2 bg-zinc-900 border border-neutral-800">
+          <TabsTrigger 
+            value="login"
+            className="data-[state=active]:bg-[#f97316] data-[state=active]:text-white"
+          >
+            Login
+          </TabsTrigger>
+          <TabsTrigger 
+            value="signup"
+            className="data-[state=active]:bg-[#f97316] data-[state=active]:text-white"
+          >
+            Signup
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="login">
           <Login />
