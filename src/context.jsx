@@ -1,13 +1,26 @@
 /* eslint-disable react/prop-types */
 
-import {createContext, useContext, useEffect} from "react";
-import {getCurrentUser} from "./db/apiAuth";
-import useFetch from "./hooks/use-fetch";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getCurrentUser } from "./db/apiAuth";
 
 const UrlContext = createContext();
 
-const UrlProvider = ({children}) => {
-  const {data: user, loading, fn: fetchUser} = useFetch(getCurrentUser);
+const UrlProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUser = async () => {
+    setLoading(true);
+    try {
+      const userData = await getCurrentUser();
+      setUser(userData);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const isAuthenticated = user?.role === "authenticated";
 
@@ -16,7 +29,7 @@ const UrlProvider = ({children}) => {
   }, []);
 
   return (
-    <UrlContext.Provider value={{user, fetchUser, loading, isAuthenticated}}>
+    <UrlContext.Provider value={{ user, fetchUser, loading, isAuthenticated, setUser }}>
       {children}
     </UrlContext.Provider>
   );

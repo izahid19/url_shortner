@@ -19,6 +19,9 @@ import { BeatLoader } from "react-spinners";
 import { UrlState } from "@/context";
 import { QRCode } from "react-qrcode-logo";
 
+// Use current origin for short URL display (frontend URL)
+const BASE_URL = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
+
 export function CreateLink() {
   const { user } = UrlState();
 
@@ -178,7 +181,7 @@ export function CreateLink() {
               Custom URL (optional)
             </label>
             <div className="flex flex-wrap gap-2 items-center">
-              <Card className="p-2 text-sm sm:text-base">trimmm.netlify.app</Card>
+              <Card className="p-2 text-sm sm:text-base">{BASE_URL.replace(/^https?:\/\//, '')}</Card>
               <span className="text-sm">/</span>
               <Input
                 id="customUrl"

@@ -1,53 +1,129 @@
-import supabase, {supabaseUrl} from "./supabase";
+import { api, setToken, removeToken } from "./supabase";
 
-export async function login({email, password}) {
-  const {data, error} = await supabase.auth.signInWithPassword({
-    email,
-    password,
+/**
+ * Login user
+ */
+export async function login({ email, password }) {
+  const response = await api('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password })
   });
 
-  if (error) throw new Error(error.message);
+  if (response.token) {
+    setToken(response.token);
+  }
 
-  return data;
+  return response;
 }
 
-export async function signup({name, email, password, profilepic}) {
-  const fileName = `dp-${name.split(" ").join("-")}-${Math.random()}`;
+/**
+ * Signup user - sends verification OTP
+ */
+export async function signup({ name, email, password, profilepic }) {
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('password', password);
+  if (profilepic) {
+    formData.append('profilePic', profilepic);
+  }
 
-  const {error: storageError} = await supabase.storage
-    .from("profilepic")
-    .upload(fileName, profilepic);
-
-  if (storageError) throw new Error(storageError.message);
-
-  const {data, error} = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        name,
-        profilepic: `${supabaseUrl}/storage/v1/object/public/profilepic/${fileName}`,
-      },
-    },
+  const response = await api('/api/auth/signup', {
+    method: 'POST',
+    body: formData
   });
 
-  if (error) throw new Error(error.message);
-
-  return data;
+  return response;
 }
 
+/**
+ * Verify email with OTP
+ */
+export async function verifyEmail({ email, otp }) {
+  const response = await api('/api/auth/verify-email', {
+    method: 'POST',
+    body: JSON.stringify({ email, otp })
+  });
+
+  if (response.token) {
+    setToken(response.token);
+  }
+
+  return response;
+}
+
+/**
+ * Resend OTP
+ */
+export async function resendOtp({ email, type = 'verify' }) {
+  const response = await api('/api/auth/resend-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email, type })
+  });
+
+  return response;
+}
+
+/**
+ * Get current user
+ */
 export async function getCurrentUser() {
-  const {data: session, error} = await supabase.auth.getSession();
-  if (!session.session) return null;
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
 
-  // const {data, error} = await supabase.auth.getUser();
-
-  if (error) throw new Error(error.message);
-  return session.session?.user;
+    const response = await api('/api/auth/me');
+    return response.user;
+  } catch (error) {
+    // If token is invalid, clear it
+    removeToken();
+    return null;
+  }
 }
 
+/**
+ * Logout user
+ */
 export async function logout() {
-  const { error } = await supabase.auth.signOut();
-  // Ignore harmless session_not_found error
-  if (error && error.code !== "session_not_found") throw new Error(error.message);
+  removeToken();
+}
+
+/**
+ * Forgot password - sends reset OTP
+ */
+export async function forgotPassword({ email }) {
+  const response = await api('/api/auth/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify({ email })
+  });
+
+  return response;
+}
+
+/**
+ * Reset password with OTP
+ */
+export async function resetPassword({ email, otp, newPassword }) {
+  const response = await api('/api/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify({ email, otp, newPassword })
+  });
+
+  return response;
+}
+
+/**
+ * Update user profile
+ */
+export async function updateProfile({ name, profilepic }) {
+  const formData = new FormData();
+  if (name) formData.append('name', name);
+  if (profilepic) formData.append('profilePic', profilepic);
+
+  const response = await api('/api/auth/update-profile', {
+    method: 'PUT',
+    body: formData
+  });
+
+  return response;
 }

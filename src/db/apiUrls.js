@@ -1,91 +1,69 @@
-import supabase, {supabaseUrl} from "./supabase";
+import { api } from "./supabase";
+import API_URL from "./supabase";
 
-export async function getUrls(user_id) {
-  let {data, error} = await supabase
-    .from("url_short")
-    .select("*")
-    .eq("user_id", user_id);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Unable to load URLs");
-  }
-
-  return data;
+/**
+ * Get all URLs for user
+ */
+export async function getUrls() {
+  const response = await api('/api/urls');
+  return response.data;
 }
 
-export async function getUrl({id, user_id}) {
-  const {data, error} = await supabase
-    .from("url_short")
-    .select("*")
-    .eq("id", id)
-    .eq("user_id", user_id)
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Short Url not found");
-  }
-
-  return data;
+/**
+ * Get a single URL
+ */
+export async function getUrl({ id }) {
+  const response = await api(`/api/urls/${id}`);
+  return response.data;
 }
 
-export async function getLongUrl(id) {
-  let {data: shortLinkData, error: shortLinkError} = await supabase
-    .from("url_short")
-    .select("id, original_url")
-    .or(`short_url.eq.${id},custom_url.eq.${id}`)
-    .single();
-
-  if (shortLinkError && shortLinkError.code !== "PGRST116") {
-    console.error("Error fetching short link:", shortLinkError);
-    return;
+/**
+ * Get long URL for redirect (public)
+ */
+export async function getLongUrl(shortCode) {
+  try {
+    const response = await fetch(`${API_URL}/api/lookup/${shortCode}`);
+    const data = await response.json();
+    
+    if (!response.ok || !data.success) {
+      return null;
+    }
+    
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching long URL:", error);
+    return null;
   }
-
-  return shortLinkData;
 }
 
-export async function createUrl({title, longUrl, customUrl, user_id}, qrcode) {
-  const short_url = Math.random().toString(36).substr(2, 6);
-  const fileName = `qr-${short_url}`;
-
-  const {error: storageError} = await supabase.storage
-    .from("qrs")
-    .upload(fileName, qrcode);
-
-  if (storageError) throw new Error(storageError.message);
-
-  const qr = `${supabaseUrl}/storage/v1/object/public/qrs/${fileName}`;
-
-  const {data, error} = await supabase
-    .from("url_short")
-    .insert([
-      {
-        title,
-        user_id,
-        original_url: longUrl,
-        custom_url: customUrl || null,
-        short_url,
-        qr,
-      },
-    ])
-    .select();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Error creating short URL");
+/**
+ * Create a new short URL
+ */
+export async function createUrl({ title, longUrl, customUrl, user_id }, qrcode) {
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('longUrl', longUrl);
+  if (customUrl) {
+    formData.append('customUrl', customUrl);
+  }
+  if (qrcode) {
+    formData.append('qrCode', qrcode, 'qr.png');
   }
 
-  return data;
+  const response = await api('/api/urls', {
+    method: 'POST',
+    body: formData
+  });
+
+  return response.data;
 }
 
+/**
+ * Delete a URL
+ */
 export async function deleteUrl(id) {
-  const {data, error} = await supabase.from("url_short").delete().eq("id", id);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Unable to delete Url");
-  }
-
-  return data;
+  const response = await api(`/api/urls/${id}`, {
+    method: 'DELETE'
+  });
+  return response;
 }

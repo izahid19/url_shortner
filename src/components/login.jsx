@@ -162,9 +162,16 @@ const Login = () => {
               </span>
             </div>
             {errors.password && <Error message={errors.password} />}
+            <button
+              type="button"
+              onClick={() => navigate("/forgot-password")}
+              className="text-sm text-blue-500 hover:underline self-end mt-1"
+            >
+              Forgot Password?
+            </button>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-2">
           <Button
             className="w-full"
             onClick={handleLogin}
