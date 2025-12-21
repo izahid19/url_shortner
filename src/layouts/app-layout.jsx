@@ -20,15 +20,15 @@ const AppLayout = () => {
       </main>
       {!isAuthRoute && !isLandingPage && (
         <footer className="p-6 text-center bg-[#050505] border-t border-gray-800 mt-auto">
-          <p className="text-gray-400 text-sm">
-            Made with ❤️ by{' '}
+          <p className="text-gray-400 text-sm flex items-center justify-center gap-1.5">
+            Built with <span className="text-red-500 animate-pulse">❤️</span> by{" "}
             <a 
-              href="https://github.com/izahid19" 
+              href="https://devzahid.vercel.app/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[#f97316] hover:underline"
+              className="text-[#f97316] font-medium hover:underline hover:text-[#ea580c] transition-colors"
             >
-              Zahid
+              Zahid Mushtaq
             </a>
           </p>
         </footer>

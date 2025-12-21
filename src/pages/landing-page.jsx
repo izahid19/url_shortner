@@ -433,9 +433,24 @@ const LandingPage = () => {
       {/* Footer */}
       <footer className="relative z-10 py-8 px-4 border-t border-gray-800 bg-[#050505]">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-white">Trimmm</span>
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-white">Trimmm</span>
+            </div>
+            
+            <div className="text-gray-400 text-xs flex items-center gap-1.5">
+              Built with <span className="text-red-500 animate-pulse">❤️</span> by{" "}
+              <a
+                href="https://devzahid.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#f97316] font-medium hover:underline hover:text-[#ea580c] transition-colors"
+              >
+                Zahid Mushtaq
+              </a>
+            </div>
           </div>
+
           <p className="text-gray-500 text-sm">
             © {new Date().getFullYear()} Trimmm. All rights reserved.
           </p>
