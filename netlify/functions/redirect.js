@@ -1,33 +1,39 @@
-const { createClient } = require('@supabase/supabase-js');
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Use service role for server-side
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Netlify redirect function for short URL redirects
+// This function proxies to the backend API
+import config from '../../src/config/config.js';
 
 exports.handler = async (event, context) => {
   // Extract the short code from the path
   const shortCode = event.path.replace('/.netlify/functions/redirect/', '');
+  
+  // Backend API URL from config
+  const API_URL = config.API_URL;
 
-  // Query Supabase for the original URL
-  const { data, error } = await supabase
-    .from('url_short')
-    .select('original_url')
-    .or(`short_url.eq.${shortCode},custom_url.eq.${shortCode}`)
-    .single();
+  try {
+    // Query backend for the original URL
+    const response = await fetch(`${API_URL}/${shortCode}`);
+    const data = await response.json();
 
-  if (error || !data) {
+    if (!response.ok || !data.success) {
+      return {
+        statusCode: 404,
+        body: 'Short link not found',
+      };
+    }
+
+    // Redirect to the original URL
     return {
-      statusCode: 404,
-      body: 'Short link not found',
+      statusCode: 302,
+      headers: {
+        Location: data.data.original_url,
+      },
+      body: '',
+    };
+  } catch (error) {
+    console.error('Redirect error:', error);
+    return {
+      statusCode: 500,
+      body: 'Error processing redirect',
     };
   }
-
-  // Redirect to the original URL
-  return {
-    statusCode: 302,
-    headers: {
-      Location: data.original_url,
-    },
-    body: '',
-  };
-}; 
+};

@@ -19,6 +19,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// Use current origin for short URL display (frontend URL)
+const BASE_URL = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
+
 const LinkPage = () => {
   const downloadImage = () => {
     const imageUrl = url?.qr;
@@ -81,12 +84,12 @@ const LinkPage = () => {
           <div className="flex flex-wrap items-center gap-2 text-1xl sm:text-2xl font-bold">
             <span>Shortner Link:</span>
             <a
-              href={`https://trimmm.netlify.app/${link}`}
+              href={`${BASE_URL}/${link}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-400 hover:underline cursor-pointer break-all"
             >
-              https://trimmm.netlify.app/{link}
+              {BASE_URL}/{link}
             </a>
           </div>
 
@@ -120,7 +123,7 @@ const LinkPage = () => {
               variant="ghost"
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `https://trimmm.netlify.app/${link}`
+                  `${BASE_URL}/${link}`
                 )
               }
             >

@@ -103,10 +103,11 @@ const Signup = () => {
 
   useEffect(() => {
     if (error === null && data) {
-      toast.success("Account created successfully!");
-      navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+      toast.success("Please check your email for verification code!");
+      // Redirect to verify email page
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}${longLink ? `&createNew=${longLink}` : ""}`);
     }
-  }, [error, data, longLink, navigate]);
+  }, [error, data, longLink, navigate, formData.email]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
