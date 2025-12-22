@@ -311,7 +311,7 @@ const Signup = () => {
           <DialogHeader>
             <DialogTitle className="text-white">Select an Avatar</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-5 gap-4 py-4">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 sm:gap-4 py-4">
             {AVATARS.map((avatar, index) => (
               <button
                 key={index}

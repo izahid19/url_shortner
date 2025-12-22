@@ -195,12 +195,12 @@ export function CreateLink() {
           </div>
         </div>
         {error && <Error message={errors.message} />}
-        <DialogFooter className="sm:justify-start mt-4">
+        <DialogFooter className="flex flex-row gap-3 mt-4">
           <Button
             type="button"
             onClick={createNewLink}
             disabled={loading}
-            className="bg-[#f97316] hover:bg-[#ea580c] text-white font-medium rounded-xl"
+            className="flex-1 bg-[#f97316] hover:bg-[#ea580c] text-white font-medium rounded-xl"
           >
             {loading ? <BeatLoader size={10} color="white" /> : "Create"}
           </Button>
@@ -208,7 +208,7 @@ export function CreateLink() {
             type="button"
             variant="outline"
             onClick={handleCancel}
-            className="ml-2 text-gray-400 border-neutral-700 hover:bg-zinc-800 hover:text-white"
+            className="flex-1 border-[#f97316] text-[#f97316] hover:bg-[#f97316]/10 hover:text-[#f97316] rounded-xl"
           >
             Cancel
           </Button>
