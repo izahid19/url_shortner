@@ -2,11 +2,16 @@ import { api } from "./supabase";
 import API_URL from "./supabase";
 
 /**
- * Get all URLs for user
+ * Get all URLs for user with pagination and search
+ * @param {Object} _ - ignored (useFetch options)
+ * @param {Object} params - { page, limit, search }
  */
-export async function getUrls() {
-  const response = await api('/api/urls');
-  return response.data;
+export async function getUrls(_, { page = 1, limit = 10, search = '' } = {}) {
+  const params = new URLSearchParams({ page, limit });
+  if (search) params.append('search', search);
+  
+  const response = await api(`/api/urls?${params.toString()}`);
+  return response;
 }
 
 /**

@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link2, MousePointerClick, Search, Plus, TrendingUp, Sparkles } from "lucide-react";
+import { Link2, MousePointerClick, Search, Plus, TrendingUp, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -84,30 +84,62 @@ const AnimatedNumber = ({ value, delay = 0 }) => {
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
+  const limit = 10;
+
   const { user } = UrlState();
-  const { loading, error, data: urls, fn: fnUrls } = useFetch(getUrls, user.id);
+  const { loading, error, data: urlsResponse, fn: fnUrls } = useFetch(getUrls);
   const {
     loading: loadingClicks,
     data: clicks,
     fn: fnClicks,
   } = useFetch(
     getClicksForUrls,
-    urls?.map((url) => url.id)
+    urlsResponse?.data?.map((url) => url.id)
   );
 
+  // Debounce search input
   useEffect(() => {
-    fnUrls();
-  }, []);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(1); // Reset to first page on search
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-  const filteredUrls = urls?.filter((url) =>
-    url.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  // Fetch URLs when page or search changes
   useEffect(() => {
-    if (urls?.length) fnClicks();
-  }, [urls?.length]);
+    fnUrls({ page, limit, search: debouncedSearch });
+  }, [page, debouncedSearch]);
 
+  // Update pagination when response changes
+  useEffect(() => {
+    if (urlsResponse?.pagination) {
+      setPagination(urlsResponse.pagination);
+    }
+  }, [urlsResponse]);
+
+  // Fetch clicks when URLs change
+  useEffect(() => {
+    if (urlsResponse?.data?.length) fnClicks();
+  }, [urlsResponse?.data?.length]);
+
+  const urls = urlsResponse?.data || [];
   const isLoading = loading;
+
+  const handleNextPage = () => {
+    if (pagination?.hasNext) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (pagination?.hasPrev) {
+      setPage((prev) => prev - 1);
+    }
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -159,7 +191,7 @@ const Dashboard = () => {
                   <div>
                     <p className="text-sm font-medium text-gray-400 mb-2">Total Links</p>
                     <p className="text-5xl font-bold text-white tracking-tight">
-                      <AnimatedNumber value={urls?.length || 0} delay={200} />
+                      <AnimatedNumber value={pagination?.total || 0} delay={200} />
                     </p>
                     <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
                       <TrendingUp className="h-3 w-3 text-green-500" />
@@ -204,7 +236,8 @@ const Dashboard = () => {
           <div>
             <h2 className="text-2xl font-bold text-white">Your Links</h2>
             <p className="text-gray-500 text-sm mt-1">
-              {filteredUrls?.length || 0} {filteredUrls?.length === 1 ? 'link' : 'links'} total
+              {pagination?.total || 0} {pagination?.total === 1 ? 'link' : 'links'} total
+              {debouncedSearch && ` • Searching for "${debouncedSearch}"`}
             </p>
           </div>
           <div className="relative w-full sm:w-auto">
@@ -224,7 +257,7 @@ const Dashboard = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="flex flex-col gap-4 pb-8"
+          className="flex flex-col gap-4"
         >
           <AnimatePresence mode="popLayout">
             {isLoading ? (
@@ -232,7 +265,7 @@ const Dashboard = () => {
                 <LinkCardSkeleton />
                 <LinkCardSkeleton />
               </>
-            ) : filteredUrls?.length === 0 ? (
+            ) : urls.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -244,19 +277,25 @@ const Dashboard = () => {
                     <Link2 className="h-12 w-12 text-[#f97316]" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">No links yet</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  {debouncedSearch ? "No links found" : "No links yet"}
+                </h3>
                 <p className="text-gray-400 mb-8 max-w-md mx-auto">
-                  Create your first short link to start tracking clicks and sharing with the world.
+                  {debouncedSearch 
+                    ? `No links match "${debouncedSearch}". Try a different search term.`
+                    : "Create your first short link to start tracking clicks and sharing with the world."}
                 </p>
-                <CreateLink>
-                  <Button className="h-12 px-8 bg-gradient-to-r from-[#f97316] to-[#ea580c] hover:from-[#ea580c] hover:to-[#dc2626] text-white font-semibold rounded-xl shadow-lg shadow-[#f97316]/25 transition-all duration-300 hover:shadow-[#f97316]/40 hover:scale-105">
-                    <Plus className="mr-2 h-5 w-5" />
-                    Create Your First Link
-                  </Button>
-                </CreateLink>
+                {!debouncedSearch && (
+                  <CreateLink>
+                    <Button className="h-12 px-8 bg-gradient-to-r from-[#f97316] to-[#ea580c] hover:from-[#ea580c] hover:to-[#dc2626] text-white font-semibold rounded-xl shadow-lg shadow-[#f97316]/25 transition-all duration-300 hover:shadow-[#f97316]/40 hover:scale-105">
+                      <Plus className="mr-2 h-5 w-5" />
+                      Create Your First Link
+                    </Button>
+                  </CreateLink>
+                )}
               </motion.div>
             ) : (
-              (filteredUrls || []).map((url, i) => (
+              urls.map((url, i) => (
                 <motion.div
                   key={url.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -265,12 +304,49 @@ const Dashboard = () => {
                   transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
                   layout
                 >
-                  <LinkCard url={url} fetchUrls={fnUrls} />
+                  <LinkCard url={url} fetchUrls={() => fnUrls({ page, limit, search: debouncedSearch })} />
                 </motion.div>
               ))
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* Pagination Controls */}
+        {!isLoading && urls.length > 0 && pagination && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 border-t border-zinc-800/50"
+          >
+            <p className="text-sm text-gray-400">
+              Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, pagination.total)} of {pagination.total} links
+            </p>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={handlePrevPage}
+                disabled={!pagination.hasPrev}
+                variant="outline"
+                className="h-10 px-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-zinc-800 hover:border-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Previous
+              </Button>
+              <span className="text-sm text-gray-300 px-3 py-2 bg-zinc-900/80 border border-zinc-800 rounded-xl">
+                Page {page} of {pagination.totalPages}
+              </span>
+              <Button
+                onClick={handleNextPage}
+                disabled={!pagination.hasNext}
+                variant="outline"
+                className="h-10 px-4 bg-zinc-900/80 border-zinc-700 text-white hover:bg-zinc-800 hover:border-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all"
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );
