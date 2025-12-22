@@ -17,7 +17,7 @@ function Auth() {
   }, [isAuthenticated, loading, navigate]);
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center gap-8 px-4">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 py-8">
       <div className="text-center">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
           {searchParams.get("createNew")

@@ -24,7 +24,7 @@ const Skeleton = ({ className }) => (
 
 // Stats Card Skeleton
 const StatsCardSkeleton = () => (
-  <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+  <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 lg:col-span-2">
     <div className="flex items-center justify-between mb-4">
       <Skeleton className="h-4 w-24" />
       <Skeleton className="h-10 w-10 rounded-xl" />
@@ -107,7 +107,7 @@ const Dashboard = () => {
     if (urls?.length) fnClicks();
   }, [urls?.length]);
 
-  const isLoading = loading || loadingClicks;
+  const isLoading = loading;
 
   return (
     <div className="relative min-h-screen">
@@ -148,8 +148,6 @@ const Dashboard = () => {
         >
           {isLoading ? (
             <>
-              <StatsCardSkeleton />
-              <StatsCardSkeleton />
               <StatsCardSkeleton />
               <StatsCardSkeleton />
             </>
@@ -231,7 +229,6 @@ const Dashboard = () => {
           <AnimatePresence mode="popLayout">
             {isLoading ? (
               <>
-                <LinkCardSkeleton />
                 <LinkCardSkeleton />
                 <LinkCardSkeleton />
               </>
