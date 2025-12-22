@@ -240,7 +240,7 @@ const LandingPage = () => {
         </article>
 
         {/* Dashboard Preview - Pushed to bottom of viewport */}
-        <div className="relative z-10 px-4 mt-auto pb-8">
+        <div className="relative z-10 px-4 mt-auto pb-20">
           <div className="text-center mb-0 relative z-0">
             <motion.span 
               className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white text-sm font-medium px-4 py-2 rounded-full mb-6"
