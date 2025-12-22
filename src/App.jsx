@@ -13,6 +13,7 @@ import Profile from "./pages/profile";
 import Auth from "./pages/auth";
 import VerifyEmail from "./components/verify-email";
 import ForgotPassword from "./components/forgot-password";
+import NotFound from "./pages/not-found";
 
 
 const router = createBrowserRouter([
@@ -60,8 +61,16 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/404",
+        element: <NotFound />,
+      },
+      {
         path: "/:id",
         element: <RedirectLink />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },
