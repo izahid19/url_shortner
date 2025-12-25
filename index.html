@@ -2,28 +2,109 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Trimmm is a modern URL shortener that helps you create short, memorable links with powerful analytics and QR code generation." />
-    <title>Trimmm - The Modern URL Shortener</title>
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content="Trimmm - The Modern URL Shortener" />
-    <meta property="og:description" content="Create short, memorable links with powerful analytics. Track clicks, locations, and devices with Trimmm." />
-    <meta property="og:image" content="https://trimmm.netlify.app/og-image.png" />
-    <meta property="og:url" content="https://trimmm.netlify.app" />
+    <!-- Critical inline CSS for FCP -->
+    <style>
+      /* Critical CSS - prevents flash of unstyled content */
+      *,*::before,*::after{box-sizing:border-box}
+      html{-webkit-text-size-adjust:100%;line-height:1.5}
+      body{margin:0;background:#050505;color:#fff;font-family:system-ui,-apple-system,sans-serif}
+      #root{min-height:100vh;display:flex;flex-direction:column}
+      /* Prevent layout shift for main content */
+      .min-h-screen{min-height:100vh}
+    </style>
+    
+    <!-- Primary Meta Tags -->
+    <title>Trimmm - The Modern URL Shortener | Free Link Shortening & Analytics</title>
+    <meta name="title" content="Trimmm - The Modern URL Shortener | Free Link Shortening & Analytics" />
+    <meta name="description" content="Shorten URLs, generate QR codes, and track every click with powerful analytics. The only URL shortener you'll ever need. Free forever." />
+    <meta name="keywords" content="url shortener, link shortener, free url shortener, qr code generator, link analytics, click tracking, custom short links" />
+    <meta name="author" content="Zahid Mushtaq" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://trimmm.netlify.app/" />
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://trimmm.netlify.app/" />
+    <meta property="og:title" content="Trimmm - The Modern URL Shortener | Free Link Shortening & Analytics" />
+    <meta property="og:description" content="Shorten URLs, generate QR codes, and track every click with powerful analytics. The only URL shortener you'll ever need. Free forever." />
+    <meta property="og:image" content="https://trimmm.netlify.app/og-image.png" />
+    <meta property="og:site_name" content="Trimmm" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter Card Meta Tags -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Trimmm - The Modern URL Shortener" />
-    <meta name="twitter:description" content="Create short, memorable links with powerful analytics. Track clicks, locations, and devices with Trimmm." />
+    <meta name="twitter:url" content="https://trimmm.netlify.app/" />
+    <meta name="twitter:title" content="Trimmm - The Modern URL Shortener | Free Link Shortening & Analytics" />
+    <meta name="twitter:description" content="Shorten URLs, generate QR codes, and track every click with powerful analytics. The only URL shortener you'll ever need. Free forever." />
     <meta name="twitter:image" content="https://trimmm.netlify.app/og-image.png" />
     
     <!-- Theme Color -->
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#f97316" />
+    <meta name="msapplication-TileColor" content="#f97316" />
+    
+    <!-- Additional SEO -->
+    <meta name="application-name" content="Trimmm" />
+    <meta name="apple-mobile-web-app-title" content="Trimmm" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Trimmm",
+        "url": "https://trimmm.netlify.app",
+        "logo": "https://trimmm.netlify.app/logo.png",
+        "description": "Modern URL shortener with powerful analytics and QR code generation."
+      }
+    </script>
+    
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Trimmm",
+        "url": "https://trimmm.netlify.app",
+        "description": "Shorten URLs, generate QR codes, and track every click with powerful analytics.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://trimmm.netlify.app/auth?createNew={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    
+    <!-- Structured Data - SoftwareApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Trimmm",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "url": "https://trimmm.netlify.app",
+        "description": "Free URL shortener with QR code generation and click analytics.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

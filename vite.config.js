@@ -11,7 +11,29 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  rules: {
-    "react/prop-types": 0,
+  build: {
+    // Optimize for production
+    target: 'esnext',
+    minify: 'esbuild',
+    cssMinify: true,
+    // Generate separate chunks for better caching
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunk for React
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // UI chunk for components
+          'vendor-ui': ['framer-motion', 'lucide-react'],
+          // Charts chunk
+          'vendor-charts': ['recharts'],
+        },
+      },
+    },
+    // Reduce chunk size warnings threshold
+    chunkSizeWarningLimit: 500,
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
   },
 });

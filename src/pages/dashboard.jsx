@@ -16,6 +16,8 @@ import useFetch from "@/hooks/use-fetch";
 import { getUrls } from "@/db/apiUrls";
 import { getClicksForUrls } from "@/db/apiClicks";
 import { UrlState } from "@/context";
+import { SEO } from "@/components/seo";
+import { pageSEO } from "@/config/seo.config";
 
 // Shimmer Skeleton Component
 const Skeleton = ({ className }) => (
@@ -142,9 +144,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background Beams */}
-      <BackgroundBeams className="opacity-40" />
+    <>
+      <SEO
+        title={pageSEO.dashboard.title}
+        description={pageSEO.dashboard.description}
+        noindex={true}
+      />
+      <div className="relative min-h-screen" role="main">
+        {/* Background Beams */}
+        <BackgroundBeams className="opacity-40" />
 
       <motion.div
         className="relative z-10 flex flex-col gap-8 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
@@ -347,8 +355,9 @@ const Dashboard = () => {
             </div>
           </motion.div>
         )}
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </>
   );
 };
 

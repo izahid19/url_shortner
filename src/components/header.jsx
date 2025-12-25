@@ -71,6 +71,7 @@ const Header = () => {
                 <button
                   onClick={() => navigate("/auth")}
                   className="flex items-center gap-2 bg-[#f97316] text-white border border-transparent h-10 px-4 rounded-lg hover:bg-[#ea580c] transition-colors font-medium"
+                  style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
                 >
                   <ArrowRight size={18} />
                   Login

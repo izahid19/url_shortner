@@ -13,6 +13,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SEO, FAQJsonLd } from "@/components/seo";
+import { pageSEO } from "@/config/seo.config";
 
 const LandingPage = () => {
   const [longUrl, setLongUrl] = useState("");
@@ -52,6 +54,7 @@ const LandingPage = () => {
     []
   );
 
+  // Defer the heavy grid animation until browser is idle (after LCP)
   useEffect(() => {
     const updateBlocks = () => {
       const { innerWidth, innerHeight } = window;
@@ -76,10 +79,21 @@ const LandingPage = () => {
       setBlocks(newBlocks);
     };
 
-    updateBlocks();
+    // Defer grid creation until browser is idle to not block LCP
+    const timeoutId = setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(updateBlocks);
+      } else {
+        updateBlocks();
+      }
+    }, 1000); // Delay 1 second to allow LCP to complete first
+
     window.addEventListener("resize", updateBlocks);
 
-    return () => window.removeEventListener("resize", updateBlocks);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", updateBlocks);
+    };
   }, [activeDivs]);
 
   const handleShorten = (e) => {
@@ -112,13 +126,44 @@ const LandingPage = () => {
     }
   ];
 
+  // FAQ data for JSON-LD structured data
+  const faqData = [
+    {
+      question: "How does the Trimmm URL shortener work?",
+      answer: "When you enter a long URL, our system generates a shorter version of that URL. This shortened URL redirects to the original long URL when accessed, while we track valuable analytics for you."
+    },
+    {
+      question: "Do I need an account to use the app?",
+      answer: "Yes. Creating an account allows you to manage your URLs, view analytics, customize your short URLs, and access your links from anywhere."
+    },
+    {
+      question: "What analytics are available for my shortened URLs?",
+      answer: "You can view the number of clicks, geolocation data of the clicks, device types (mobile/desktop), and more for each of your shortened URLs."
+    },
+    {
+      question: "Can I customize my short URLs?",
+      answer: "Yes! You can create custom short URLs with your own chosen slug, making your links more memorable and branded."
+    }
+  ];
+
   return (
-    <div className="relative">
+    <>
+      {/* SEO Component */}
+      <SEO
+        title={pageSEO.home.title}
+        description={pageSEO.home.description}
+        keywords={pageSEO.home.keywords}
+        canonicalUrl="https://trimmm.netlify.app/"
+      />
+      {/* FAQ Structured Data */}
+      <FAQJsonLd faqs={faqData} />
+      
+      <div className="relative">
       {/* Hero Section - Full viewport with centered content */}
-      <section className="overflow-hidden relative z-20 min-h-screen flex flex-col">
+      <section className="overflow-hidden relative z-20 min-h-screen flex flex-col" aria-label="Hero">
         {/* Background Gradient Overlay */}
-        <div className="absolute inset-0 z-0 h-full w-full bg-[radial-gradient(#1d1d1d_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div className="absolute inset-0 top-0 left-0 h-full w-full bg-gradient-to-t from-[#050505] from-0% to-transparent to-60%"></div>
+        <div className="absolute inset-0 z-0 h-full w-full bg-[radial-gradient(#1d1d1d_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
+        <div className="absolute inset-0 top-0 left-0 h-full w-full bg-gradient-to-t from-[#050505] from-0% to-transparent to-60%" aria-hidden="true"></div>
 
         {/* SVG Glow */}
         <div className="pointer-events-none absolute inset-0 flex w-screen justify-end opacity-50">
@@ -172,9 +217,8 @@ const LandingPage = () => {
         <article className="mx-auto w-full max-w-5xl grid relative z-10 px-4 pt-40 pb-48">
           <motion.div
             className="flex justify-center"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <AnnouncementBadge
               label="New"
@@ -185,9 +229,8 @@ const LandingPage = () => {
 
           <motion.h1 
             className="xl:text-7xl md:text-6xl sm:text-5xl text-3xl text-center font-bold text-white tracking-tight mt-8"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <span className="text-xl sm:text-2xl md:text-3xl text-gray-400 block mb-4">The Only URL Shortener You'll Ever Need</span>
             <span className="relative flex gap-3 justify-center items-center flex-wrap">
@@ -202,9 +245,8 @@ const LandingPage = () => {
 
           <motion.p 
             className="mx-auto lg:w-[600px] sm:w-[80%] text-center sm:text-lg text-base mt-6 text-gray-400"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             Shorten URLs, generate QR codes, and track every click with 
             powerful analytics. Simple, fast, and free.
@@ -214,9 +256,8 @@ const LandingPage = () => {
           <motion.form
             onSubmit={handleShorten}
             className="max-w-2xl mx-auto w-full mt-8 flex flex-col sm:flex-row gap-3 px-4"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <Input
               type="url"
@@ -228,6 +269,7 @@ const LandingPage = () => {
             <Button
               type="submit"
               className="h-14 px-8 bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl text-base"
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
             >
               Shorten URL
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -238,7 +280,7 @@ const LandingPage = () => {
             className="text-center text-gray-500 text-sm mt-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.3, delay: 0.3 }}
           >
             Free forever • No credit card required
           </motion.p>
@@ -249,26 +291,26 @@ const LandingPage = () => {
           <div className="text-center mb-0 relative z-0">
             <motion.span 
               className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white text-sm font-medium px-4 py-2 rounded-full mb-6"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.4, delay: 0.4 }}
             >
               <span className="text-[#f97316]">✦</span>
               Dashboard Preview
             </motion.span>
             <motion.p 
               className="text-gray-400 text-base sm:text-lg mb-3"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.4, delay: 0.5 }}
             >
               Shorten links. Analyze clicks.
             </motion.p>
             <motion.h2 
               className="xl:text-7xl md:text-6xl sm:text-5xl text-3xl font-bold text-white tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.4, delay: 0.6 }}
             >
               Your Analytics Hub
             </motion.h2>
@@ -280,7 +322,7 @@ const LandingPage = () => {
             className="max-w-6xl mx-auto relative w-full px-2 sm:px-0 -mt-4 sm:-mt-6 z-10"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.5, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
             style={{
               rotateX: heroRotateX,
               y: heroY,
@@ -294,9 +336,13 @@ const LandingPage = () => {
               {/* Inner content wrapper */}
               <div className="h-full w-full overflow-hidden rounded-xl sm:rounded-2xl">
                 <img
-                  src="/banner.png"
-                  alt="Trimmm Dashboard Preview"
+                  src="/banner.webp"
+                  alt="Trimmm Dashboard Preview - URL shortener with analytics"
                   className="w-full h-auto"
+                  width="1200"
+                  height="675"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -745,7 +791,8 @@ const LandingPage = () => {
           </p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 };
 

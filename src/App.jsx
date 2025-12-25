@@ -1,20 +1,31 @@
 import "./App.css";
+import { lazy, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import UrlProvider from "./context";
 
 import AppLayout from "./layouts/app-layout";
 import RequireAuth from "./components/require-auth";
 
-import RedirectLink from "./pages/redirect-link";
-import LandingPage from "./pages/landing-page";
-import Dashboard from "./pages/dashboard";
-import LinkPage from "./pages/link";
-import Profile from "./pages/profile";
-import Auth from "./pages/auth";
-import VerifyEmail from "./components/verify-email";
-import ForgotPassword from "./components/forgot-password";
-import NotFound from "./pages/not-found";
+// Lazy load pages for code splitting
+const LandingPage = lazy(() => import("./pages/landing-page"));
+const Dashboard = lazy(() => import("./pages/dashboard"));
+const LinkPage = lazy(() => import("./pages/link"));
+const Profile = lazy(() => import("./pages/profile"));
+const Auth = lazy(() => import("./pages/auth"));
+const VerifyEmail = lazy(() => import("./components/verify-email"));
+const ForgotPassword = lazy(() => import("./components/forgot-password"));
+const NotFound = lazy(() => import("./pages/not-found"));
+const RedirectLink = lazy(() => import("./pages/redirect-link"));
 
+// Loading fallback component
+const PageLoader = () => (
+  <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-10 h-10 border-4 border-[#f97316] border-t-transparent rounded-full animate-spin" />
+      <span className="text-gray-400 text-sm">Loading...</span>
+    </div>
+  </div>
+);
 
 const router = createBrowserRouter([
   {
@@ -22,25 +33,43 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LandingPage />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <LandingPage />
+          </Suspense>
+        ),
       },
       {
         path: "/auth",
-        element: <Auth />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Auth />
+          </Suspense>
+        ),
       },
       {
         path: "/verify-email",
-        element: <VerifyEmail />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <VerifyEmail />
+          </Suspense>
+        ),
       },
       {
         path: "/forgot-password",
-        element: <ForgotPassword />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ForgotPassword />
+          </Suspense>
+        ),
       },
       {
         path: "/dashboard",
         element: (
           <RequireAuth>
-            <Dashboard />
+            <Suspense fallback={<PageLoader />}>
+              <Dashboard />
+            </Suspense>
           </RequireAuth>
         ),
       },
@@ -48,7 +77,9 @@ const router = createBrowserRouter([
         path: "/link/:id",
         element: (
           <RequireAuth>
-            <LinkPage />
+            <Suspense fallback={<PageLoader />}>
+              <LinkPage />
+            </Suspense>
           </RequireAuth>
         ),
       },
@@ -56,21 +87,35 @@ const router = createBrowserRouter([
         path: "/profile",
         element: (
           <RequireAuth>
-            <Profile />
+            <Suspense fallback={<PageLoader />}>
+              <Profile />
+            </Suspense>
           </RequireAuth>
         ),
       },
       {
         path: "/404",
-        element: <NotFound />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <NotFound />
+          </Suspense>
+        ),
       },
       {
         path: "/:id",
-        element: <RedirectLink />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <RedirectLink />
+          </Suspense>
+        ),
       },
       {
         path: "*",
-        element: <NotFound />,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <NotFound />
+          </Suspense>
+        ),
       },
     ],
   },
