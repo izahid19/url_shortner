@@ -26,7 +26,7 @@ export const siteConfig = {
   },
   
   // Default OG Image
-  defaultOgImage: "https://trimmm.netlify.app/og-image.png",
+  defaultOgImage: "https://trimmm.netlify.app/og-image.webp",
   
   // JSON-LD Organization schema
   organization: {

@@ -5,7 +5,12 @@ import WordAnimator from "@/components/ui/word-animator";
 import AnnouncementBadge from "@/components/ui/announcement-badge";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Link2, BarChart3, QrCode, Zap } from "lucide-react";
+// Individual imports for better tree-shaking
+import { ArrowRight } from "lucide-react";
+import { Link2 } from "lucide-react";
+import { BarChart3 } from "lucide-react";
+import { QrCode } from "lucide-react";
+import { Zap } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Accordion,
@@ -215,23 +220,15 @@ const LandingPage = () => {
 
         {/* Hero Content - Matching UI-Layouts structure */}
         <article className="mx-auto w-full max-w-5xl grid relative z-10 px-4 pt-40 pb-48">
-          <motion.div
-            className="flex justify-center"
-            initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <div className="flex justify-center">
             <AnnouncementBadge
               label="New"
               message="Track clicks with detailed analytics"
               href="/auth"
             />
-          </motion.div>
+          </div>
 
-          <motion.h1 
-            className="xl:text-7xl md:text-6xl sm:text-5xl text-3xl text-center font-bold text-white tracking-tight mt-8"
-            initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <h1 className="xl:text-7xl md:text-6xl sm:text-5xl text-3xl text-center font-bold text-white tracking-tight mt-8">
             <span className="text-xl sm:text-2xl md:text-3xl text-gray-400 block mb-4">The Only URL Shortener You'll Ever Need</span>
             <span className="relative flex gap-3 justify-center items-center flex-wrap">
               Make Links{" "}
@@ -241,23 +238,17 @@ const LandingPage = () => {
                 className="italic w-fit px-4 py-2 bg-gray-800/80 border border-neutral-700 rounded-lg"
               />
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p 
-            className="mx-auto lg:w-[600px] sm:w-[80%] text-center sm:text-lg text-base mt-6 text-gray-400"
-            initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+          <p className="mx-auto lg:w-[600px] sm:w-[80%] text-center sm:text-lg text-base mt-6 text-gray-400">
             Shorten URLs, generate QR codes, and track every click with 
             powerful analytics. Simple, fast, and free.
-          </motion.p>
+          </p>
 
           {/* URL Input Form */}
-          <motion.form
+          <form
             onSubmit={handleShorten}
             className="max-w-2xl mx-auto w-full mt-8 flex flex-col sm:flex-row gap-3 px-4"
-            initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
           >
             <Input
               type="url"
@@ -274,7 +265,7 @@ const LandingPage = () => {
               Shorten URL
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-          </motion.form>
+          </form>
 
           <motion.p 
             className="text-center text-gray-500 text-sm mt-4"
