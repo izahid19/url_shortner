@@ -1,0 +1,17 @@
+# Robots.txt for Trimmm URL Shortener
+# https://trimmm.netlify.app
+
+User-agent: *
+Allow: /
+
+# Disallow private/authenticated sections
+Disallow: /dashboard
+Disallow: /link/
+Disallow: /profile
+Disallow: /auth
+Disallow: /verify-email
+Disallow: /forgot-password
+Disallow: /404
+
+# Sitemap location
+Sitemap: https://trimmm.netlify.app/sitemap.xml
