@@ -332,8 +332,9 @@ const LandingPage = () => {
                   className="w-full h-auto"
                   width="1200"
                   height="675"
-                  loading="lazy"
+                  loading="eager"
                   decoding="async"
+                  fetchPriority="high"
                 />
               </div>
             </div>
