@@ -24,8 +24,6 @@ const Header = () => {
   const { user, fetchUser } = UrlState();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  console.log("hello ", user);
-
   return (
     <>
       <header className="w-full top-0 z-50 absolute lg:flex lg:items-center lg:px-8 lg:py-4">
